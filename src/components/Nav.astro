@@ -1,0 +1,18 @@
+---
+const currentPath = Astro.url.pathname;
+---
+
+<nav class="nav">
+    <a href="/" class="nav-brand">
+        <span class="nav-brand-dot"></span>
+        The Signal
+    </a>
+    <div class="nav-links">
+        <a href="/blog" class={`nav-link ${currentPath.startsWith('/blog') ? 'active' : ''}`}>
+            Blog
+        </a>
+        <a href="https://app.thesignal.health/auditor" class="nav-link">
+            Auditor
+        </a>
+    </div>
+</nav>
