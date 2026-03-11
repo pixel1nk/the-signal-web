@@ -1,0 +1,33 @@
+---
+interface Props {
+    title: string;
+    description?: string;
+}
+
+const { title, description = "Medical content intelligence for physician creators." } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title} — The Signal</title>
+    <meta name="description" content={description}>
+    <link rel="canonical" href={canonicalURL}>
+    <link rel="stylesheet" href="/css/signal.css">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={`${title} — The Signal`}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={canonicalURL}>
+    <meta property="og:type" content="website">
+
+    <!-- Sitemap + RSS -->
+    <link rel="sitemap" href="/sitemap-index.xml">
+</head>
+<body>
+    <slot />
+</body>
+</html>
