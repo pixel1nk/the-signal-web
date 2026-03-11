@@ -1,86 +1,78 @@
 ---
-import { Image } from 'astro:assets';
-import type { CollectionEntry } from 'astro:content';
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import FormattedDate from '../components/FormattedDate.astro';
-import Header from '../components/Header.astro';
+import Base from './Base.astro';
+import Nav from '../components/Nav.astro';
 
-type Props = CollectionEntry<'blog'>['data'];
+interface Props {
+    title: string;
+    description: string;
+    pubDate: Date;
+    author?: string;
+    specialty?: string;
+}
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, author, specialty } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "MedicalWebPage",
+    "name": title,
+    "description": description,
+    "url": canonicalURL,
+    "datePublished": pubDate.toISOString(),
+    "publisher": {
+        "@type": "Organization",
+        "name": "The Signal",
+        "url": "https://thesignal.health"
+    },
+    ...(author && {
+        "author": {
+            "@type": "Physician",
+            "name": author,
+            ...(specialty && { "medicalSpecialty": specialty })
+        }
+    })
+};
 ---
 
-<html lang="en">
-	<head>
-		<BaseHead title={title} description={description} />
-		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
-			}
-			.hero-image {
-				width: 100%;
-			}
-			.hero-image img {
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
-			}
-			.last-updated-on {
-				font-style: italic;
-			}
-		</style>
-	</head>
+<Base title={title} description={description}>
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
-	<body>
-		<Header />
-		<main>
-			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
-						</div>
-						<h1>{title}</h1>
-						<hr />
-					</div>
-					<slot />
-				</div>
-			</article>
-		</main>
-		<Footer />
-	</body>
-</html>
+    <Nav />
+
+    <div class="page" style="max-width:720px;">
+        <header style="margin-bottom:40px; padding-bottom:32px; border-bottom:1px solid var(--gray-100);">
+            <div style="display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap;">
+                {specialty && <span class="badge badge-indigo">{specialty}</span>}
+                <span class="badge badge-gray">
+                    {pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                </span>
+            </div>
+            <h1 class="display" style="margin-bottom:16px;">{title}</h1>
+            <p class="lead muted">{description}</p>
+            {author && (
+                <div style="display:flex; align-items:center; gap:10px; margin-top:24px;">
+                    <div style="width:36px; height:36px; background:var(--indigo-soft); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; color:var(--indigo);">
+                        {author.charAt(0)}
+                    </div>
+                    <span style="font-size:14px; font-weight:500;">{author}</span>
+                </div>
+            )}
+        </header>
+
+        <article class="prose">
+            <slot />
+        </article>
+
+        <!-- CTA -->
+        <div style="margin-top:64px; padding:36px; background:var(--gray-100); border-radius:var(--radius-lg); text-align:center;">
+            <h2 class="h2" style="margin-bottom:10px;">Is your content saying what you mean?</h2>
+            <p class="muted" style="font-size:14px; margin-bottom:24px;">
+                The Signal audits your medical content for clarity, influence, and ethics — and rewrites it in your voice.
+            </p>
+            <a href="https://app.thesignal.health/auditor" class="btn btn-primary btn-lg">
+                Try the auditor free →
+            </a>
+        </div>
+    </div>
+</Base>
