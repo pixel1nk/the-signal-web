@@ -194,6 +194,72 @@ h3, .h3 {
 .muted { color: var(--gray-500); }
 
 /* ════════════════════════════════════════════════════════
+   PROSE — Blog post content
+════════════════════════════════════════════════════════ */
+
+.prose { font-size: 16px; line-height: 1.85; color: var(--gray-700); }
+
+.prose h2 {
+    font-family: var(--font-serif);
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--black);
+    margin: 48px 0 16px;
+    letter-spacing: -0.02em;
+}
+
+.prose h3 {
+    font-family: var(--font-sans);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--black);
+    margin: 36px 0 12px;
+}
+
+.prose p { margin-bottom: 24px; }
+
+.prose ul, .prose ol {
+    padding-left: 24px;
+    margin-bottom: 24px;
+}
+
+.prose li { margin-bottom: 8px; }
+
+.prose strong { color: var(--black); font-weight: 600; }
+
+.prose a {
+    color: var(--indigo);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.prose a:hover { color: var(--indigo-dark); }
+
+.prose blockquote {
+    border-left: 3px solid var(--indigo);
+    padding: 4px 0 4px 20px;
+    margin: 32px 0;
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-style: italic;
+    color: var(--gray-700);
+}
+
+.prose code {
+    background: var(--gray-100);
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--indigo-dark);
+}
+
+.prose hr {
+    border: none;
+    border-top: 1px solid var(--gray-100);
+    margin: 48px 0;
+}
+
+/* ════════════════════════════════════════════════════════
    SCREENS (multi-step flows)
 ════════════════════════════════════════════════════════ */
 
